@@ -6,6 +6,8 @@ No es nada nuevo ni revolucionario: la técnica está documentada desde hace añ
 
 ## Cómo funciona (resumen rápido)
 
+(Puedes ver un ejemplo real de uso en mi resolución de la maquian Fuse (Nivel: Medium) de HackTheBox en mi Blog: https://frxn4fp.gitbook.io/frxn/write-ups/htb/medium/fuse)
+
 La mayoría de guías te dicen que uses `sc create` para registrar el driver. El problema es que `sc create` escribe en `HKLM\SYSTEM\CurrentControlSet\Services`, y para eso necesitas un token de administrador completo. En una sesión con UAC activo (o en Evil-WinRM, que es donde yo lo probé), eso falla con `Access is denied`.
 
 La alternativa es usar `HKCU` en lugar de `HKLM`. El kernel acepta entradas de driver en `\Registry\User\<SID>\System\CurrentControlSet\<Nombre>` siempre que tengan los valores `ImagePath` y `Type` correctos. Como `HKCU` sí es escribible sin elevación, podemos registrar el driver ahí y luego llamar a `NtLoadDriver` con esa ruta. Todo lo que necesitamos es el privilegio `SeLoadDriverPrivilege`, que en muchos entornos viene habilitado por defecto.
@@ -97,4 +99,3 @@ Fuentes:
 ## Licencia
 
 MIT. Haz lo que quieras con el código, solo no me eches la culpa si algo se rompe.
-
